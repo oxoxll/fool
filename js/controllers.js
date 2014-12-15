@@ -201,19 +201,11 @@ app.controller('AccountCtrl',
 
 
 	})
-	.controller('MainCtrl', function ($http, $scope, $cookieStore, $location, flashService, utilService, translateService) {
+	.controller('MainCtrl', function ($http, $scope, $cookieStore, $location, flashService, utilService) {
 		$scope.isLogin = utilService.isLogin();
-
 		if($scope.isLogin){
-			$location.path("/dashboard")
+			$location.path("/dashboard");
 		}
-
-//            var url = "http://ajaxhttpheaders.appspot.com?callback=JSON_CALLBACK"
-//            $http.jsonp(url)
-//                .success(function (data, status, headers, config) {
-//                    language = data['Accept-Language'];
-//                    translateService.setCurLang('');
-//                });
 	})
 	.controller('MemberCtrl', function ($scope, $http, $route, flashService, $routeParams) {
 		$scope.group_alias = $routeParams.group_alias;
@@ -514,19 +506,15 @@ app.controller('AccountCtrl',
 		};
 	}])
 	.controller('LoginCtrl', function ($scope, $http, $location, $cookieStore, flashService, utilService) {
-		$scope.email = "";
 		$scope.password = "";
 		$scope.isLogin = utilService.isLogin;
 		$scope.remember = "";
 		if ($cookieStore.get(config.login_key)) {
 			$scope.email = $cookieStore.get(config.login_key);
 		}
-		;
 		if ($cookieStore.get('enablerem')) {
 			$scope.remember = $cookieStore.get('enablerem');
 		}
-		;
-
 		$scope.login = function () {
 			if ($scope.remember) {
 				$cookieStore.put(config.login_key, $scope.email);
@@ -569,7 +557,7 @@ app.controller('AccountCtrl',
 			var data = {
 				'code': $scope.invite_code,
 				'log': $scope.email
-			}
+			};
 
 			$http.post(config.supmice + "/user/register", data)
 				.success(function (response, status) {

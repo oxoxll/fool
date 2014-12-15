@@ -4,10 +4,10 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>shuonewjiunew</title>
+    <title>regist</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
-    <link rel="stylesheet" href="custom.css">
+    <link rel="stylesheet" href="../css/custom.css">
 </head>
 <body>
     <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -26,8 +26,8 @@
             <li class=""><a href="index.html">首页</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
-            <li class="active"><a href="login.html">登录</a></li>
-            <li><a href="regist.html">注册</a></li>
+            <li class=""><a href="login.html">登录</a></li>
+            <li class="active"><a href="regist.html">注册</a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
@@ -39,30 +39,19 @@
         <div class="col-md-5">
           <form class="form-horizontal" role="form">
             <div class="form-group">
-              <label for="inputEmail3" class="col-sm-3 control-label">邮箱</label>
-              <div class="col-sm-9">
-                <input type="email" class="form-control" id="inputEmail3" placeholder="邮箱">
-              </div>
+                <input type="tel" class="form-control" maxlength="7" id="inputNickName3" placeholder="您的昵称">
             </div>
             <div class="form-group">
-              <label for="inputPassword3" class="col-sm-3 control-label">密码</label>
-              <div class="col-sm-9">
-                <input type="password" class="form-control" id="inputPassword3" placeholder="密码">
-              </div>
+                <input type="tel" class="form-control" maxlength="11" id="inputTel3" placeholder="手机号">
             </div>
             <div class="form-group">
-              <div class="col-sm-offset-3 col-sm-9">
-                <div class="checkbox">
-                  <label>
-                    <input type="checkbox"> 记住密码
-                  </label>
-                </div>
-              </div>
+                <input type="password" class="form-control" maxlength="11" id="inputPassword3" placeholder="密码">
             </div>
             <div class="form-group">
-              <div class="col-sm-offset-3 col-sm-9">
-                <button type="submit" class="btn btn-default">登录</button>
-              </div>
+                <input type="password" class="form-control" maxlength="11" id="inputPassword33" placeholder="重复密码">
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary btn-large" ng-submit="register()">注册</button>
             </div>
           </form>
         </div>
