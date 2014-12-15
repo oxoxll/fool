@@ -15,9 +15,8 @@ app.factory('flashService', function ($rootScope, translateService) {
 				return
 			}
 			messages.shift();
-			var msg = translateService.translateErr(message) || message
+			var msg = translateService.translateErr(message) || message;
 			messages.push(msg);
-//            console.log("add message==>" + msg);
 		},
 		getMessages: function () {
 //            console.log("messages:" + messages);
