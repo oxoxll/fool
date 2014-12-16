@@ -34,19 +34,6 @@ app.controller('AccountCtrl',
 				});
 		};
 
-		$scope.update_email = function () {
-			var account_info = {};
-			account_info.profile = $scope.user;
-			account_info.profile.email = $scope.email;
-
-			$http.put(config.supmice + "/user/profile", data = account_info)
-				.success(function (response, status) {
-					$scope.response = response;
-					$scope.status = status;
-					console.log(response);
-					$location.path('/account');
-				});
-		};
 
 		$scope.update_password = function () {
 			var pwd_info = {
