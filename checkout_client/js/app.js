@@ -7,7 +7,7 @@ app.config(function ($routeProvider) {
 			controller: 'MainCtrl'
 		})
 		.when('/register',{
-			templateUrl: '/views/register.html',
+			templateUrl: 'views/register.html',
 			controller: 'RegisterCtrl'
 		})
 		.when('/login', {
@@ -15,23 +15,23 @@ app.config(function ($routeProvider) {
 			controller: 'LoginCtrl'
 		})
 		.when('/dashboard', {
-			templateUrl: '/views/dashboard.html',
+			templateUrl: 'views/dashboard.html',
 			controller: 'GroupsCtrl'
 		})
 		.when('/account',{
-			templateUrl: '/views/account.html',
+			templateUrl: 'views/account.html',
 			controller: 'AccountCtrl'
 		})
 		.when('/groups/new',{
-			templateUrl: '/views/new_group.html',
+			templateUrl: 'views/new_group.html',
 			controller: 'NewGroupCtrl'
 		})
 		.when('/group/:group_alias',{
-			templateUrl: '/views/group.html',
+			templateUrl: 'views/group.html',
 			controller: 'GroupCtrl'
 		})
 		.when('/group/:group_alias/edit',{
-			templateUrl: '/views/edit_group.html',
+			templateUrl: 'views/edit_group.html',
 			controller: 'GroupCtrl'
 		})
 	});
