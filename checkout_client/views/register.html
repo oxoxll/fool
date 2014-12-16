@@ -1,0 +1,26 @@
+<div ng-include src=" 'views/header.html' "></div>
+<div ng-include src=" 'views/flash.html' "></div>
+
+<div class="container">
+  <div class="row starter-template">
+    <div class="col-md-5">
+      <form class="form-horizontal" role="form">
+        <div class="form-group">
+            <input type="text" class="form-control" maxlength="7" id="inputNickName3" placeholder="昵称" ng-model="account.nickname">
+        </div>
+        <div class="form-group">
+            <input type="email" class="form-control" maxlength="24" id="inputEmail3" placeholder="邮箱" ng-model="account.email">
+        </div>
+        <div class="form-group">
+            <input type="password" class="form-control" minlength="6" maxlength="24" id="inputPassword3" placeholder="密码 最少6位" ng-model="account.pwd">
+        </div>
+        <div class="form-group">
+            <input type="password" class="form-control" minlength="6" maxlength="24" id="inputPassword33" placeholder="再输入一次密码" ng-model="account.pwd2">
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary btn-large" ng-click="register()">注册</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div><!-- /.container -->

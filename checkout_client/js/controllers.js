@@ -1,33 +1,21 @@
-/**
- * Created by vita on 8/29/14.
- */
-function get_key_by_value(value, src_list){
-	for(var i= 0; i<src_list.length; i++){
-		if(src_list[i].value === value){
-			return src_list[i];
-		}
-	}
-	return ""
-}
-
 app.controller('AccountCtrl',
 	function ($scope, $http, $location, $routeParams) {
 		$scope.email = "";
-		$scope.address = "";
+		$scope.nickname = "";
 		$scope.password = "";
 		$scope.password_confirm = "";
 
-		$http.get(config.host + "/account")
-			.success(function (data, status, headers, config) {
-				$scope.account = data;
-				if ($scope.account) {
-					$scope.email = $scope.account.email || "";
-					$scope.address = $scope.account.address || "";
-					$scope.contact = $scope.account.contact || "";
-					$scope.description = $scope.account.description || "";
-					$scope.alias = $scope.account.alias;
-				}
-			});
+		//$http.get(config.host + "/account")
+		//	.success(function (data, status, headers, config) {
+		//		$scope.account = data;
+		//		if ($scope.account) {
+		//			$scope.email = $scope.account.email || "";
+		//			$scope.address = $scope.account.address || "";
+		//			$scope.contact = $scope.account.contact || "";
+		//			$scope.description = $scope.account.description || "";
+		//			$scope.alias = $scope.account.alias;
+		//		}
+		//	});
 
 
 		$scope.update_account = function () {
@@ -76,38 +64,6 @@ app.controller('AccountCtrl',
 		};
 
 	})
-	.controller('FlashCtrl', ['$cookieStore', '$rootScope', '$scope', 'flashService', '$interval', '$http',
-		function ($cookieStore, $rootScope, $scope, flashService, $interval, $http) {
-			$scope.messages = flashService.getMessages();
-//        console.log($scope.messages);
-
-			$rootScope.$on("$routeChangeSuccess", function () {
-				$scope.messages = flashService.getMessages();
-//            console.log($scope.messages);
-			});
-
-			$scope.unread_notifications = null;
-
-			var stop;
-			stop = $interval(function () {
-//                console.log($scope.unread_notifications);
-				if ($cookieStore.get(config.auth_key)) {
-					$http.get(config.host + "/notification/unread")
-						.success(function (data, status, headers, config) {
-							$scope.unread_notifications = data;
-						});
-				}
-			}, 60 * 1000);
-
-			$scope.$on('$destroy', function () {
-				if (angular.isDefined(stop)) {
-					$interval.cancel(stop);
-					stop = undefined;
-				}
-				;
-			});
-
-		}])
 	.controller('GroupsCtrl', function ($scope, $http) {
 		$scope.groups = [];
 
@@ -201,8 +157,8 @@ app.controller('AccountCtrl',
 
 
 	})
-	.controller('MainCtrl', function ($http, $scope, $cookieStore, $location, flashService, utilService) {
-		$scope.isLogin = utilService.isLogin();
+	.controller('MainCtrl', function ($scope, $http, $location, cookieService) {
+		$scope.isLogin = cookieService.isLogin();
 		if($scope.isLogin){
 			$location.path("/dashboard");
 		}
@@ -214,7 +170,6 @@ app.controller('AccountCtrl',
 			.success(function (data, status, headers, config) {
 				$scope.members = data;
 			});
-
 
 		$scope.delete_member = function (alias) {
 			$http.delete(config.host + "/member/" + alias)
@@ -272,243 +227,9 @@ app.controller('AccountCtrl',
 				});
 		};
 	})
-	.controller('PeopleCtrl', function ($scope, $http, flashService, $routeParams) {
-		$scope.group_alias = $routeParams.group_alias;
-
-
-
-		if($routeParams.class){
-			$http.get(config.host + "/people/" + $scope.group_alias + "?class=" + $routeParams.class)
-				.success(function (data, status, headers, config) {
-					$scope.people = data['talents'];
-					$scope.total = data['total'];
-					$scope.match = data['match'];
-					$scope.job_classes = data['job_class'];
-					$scope.handlers = data['handlers'];
-					console.log(data);
-				});
-		}else{
-			$http.get(config.host + "/people/" + $scope.group_alias)
-				.success(function (data, status, headers, config) {
-					$scope.people = data['talents'];
-					$scope.total = data['total'];
-					$scope.match = data['match'];
-					$scope.job_classes = data['job_classes'];
-					$scope.handlers = data['handlers'];
-//                    console.log(data);
-				});
-		}
-
-		$scope.searchKey = null;
-		$scope.sortKey = "name";
-		$scope.job_class = "all";
-		$scope.handler_id = "all";
-		$scope.searchFilter = function (person) {
-			var keyword = new RegExp($scope.searchKey, 'i');
-			return (!$scope.searchKey || keyword.test(person.name) || keyword.test(person.personal.phone)
-				|| keyword.test(person.personal.email))
-				&& ($scope.job_class == 'all' || person.career.job_class == $scope.job_class)
-				&& ($scope.handler_id == 'all' || person.creator_id == $scope.handler_id);
-		};
-
-		$scope.setClass = function(job_c) {
-			console.log(job_c);
-			$scope.job_class = job_c;
-		}
-
-		$scope.setHandler = function(handler_id) {
-			$scope.handler_id = handler_id;
-		}
-
-		$scope.setSortKey = function(key){
-			$scope.sortKey = key;
-		}
-	})
-	.controller('NewPersonCtrl', function ($scope, $http, $location, $upload, flashService, translateService, $routeParams) {
-//        $scope.educations = translateService.getEducations();
-		$scope.meetings = translateService.getMeetings();
-		$scope.offers = translateService.getOffers();
-		$scope.job_classes = translateService.getJobClasses();
-
-		d = new Date();
-
-		$scope.person = {
-			'name': "",
-			'update_time': d.yyyymmdd(),
-			'group_alias': $routeParams.group_alias,
-
-			'personal': {
-				'age': "",
-				'gender': "male",
-				'work_time': "",
-				'current_city': "",
-				'email': "",
-				'phone': "",
-				'marital_status': "single",
-				'education': "",
-				'returnees': "no",
-				'census_register': '',
-				'citizenship': 'local',
-				'resume_path': ""
-			},
-			'career': {
-				'job_class': "",
-				'job_title': "",
-				'salary_exp': "",
-				'job_status': "work"
-			},
-			'interview': {
-				'meeting': $scope.meetings[0],
-				'scores': {
-					'look': 0,
-					'knowledge': 0,
-					'speech': 0,
-					'intention': 0
-				},
-				'offer': $scope.offers[0]
-			},
-			'description': ''
-		};
-
-		$scope.onFileSelect = function ($file) {
-			$scope.upload = $upload.upload({
-				url: config.host + '/people/resume',
-				method: 'POST',
-				file: $file
-			}).progress(function (evt) {
-				$scope.upload_msg = "";
-				$scope.progress = parseInt(100.0 * evt.loaded / evt.total)
-//                console.log('percent: ' + $scope.progress);
-			}).success(function (data, status, headers, config) {
-				$scope.person.personal.resume_path = data['resume_path'];
-				$scope.progress = -1;
-				$scope.upload_msg = "upload_success";
-			}).error(function (data) {
-				console.log(data);
-				$scope.progress = -1;
-			});
-		}
-
-		$scope.new_person = function () {
-			$scope.person.personal.age = parseInt($scope.person.personal.age);
-			$scope.person.personal.work_time = parseInt($scope.person.personal.work_time);
-			$scope.person.career.job_class = $scope.person.career.job_class.value;
-//            $scope.person.personal.education = parseInt($scope.person.personal.education.value);
-
-			$scope.person.interview.offer = parseInt($scope.person.interview.offer.value);
-			$scope.person.interview.meeting = parseInt($scope.person.interview.meeting.value);
-			$scope.person.interview.scores.look = parseInt($scope.person.interview.scores.look);
-			$scope.person.interview.scores.knowledge = parseInt($scope.person.interview.scores.knowledge);
-			$scope.person.interview.scores.speech = parseInt($scope.person.interview.scores.speech);
-			$scope.person.interview.scores.intention = parseInt($scope.person.interview.scores.intention);
-
-			$scope.person.custom_field = {};
-
-			$http.post(config.host + "/people", data = $scope.person)
-				.success(function (response, status) {
-					$scope.response = response;
-					$scope.status = status;
-//                    console.log(response);
-					$location.path('/people/' + $scope.person.group_alias)
-				})
-				.error(function(data, status, headers, config){
-					$scope.person.interview.offer = get_key_by_value($scope.person.interview.offer, $scope.offers);
-					$scope.person.career.job_class = get_key_by_value($scope.person.career.job_class, $scope.job_classes);
-					$scope.person.interview.meeting = $scope.meetings[$scope.person.interview.meeting];
-				});
-		};
-	})
-	.controller('PersonCtrl', function ($scope, $http, $location, $upload, $routeParams, flashService, translateService) {
-//        $scope.educations = translateService.getEducations();
-		$scope.meetings = translateService.getMeetings();
-		$scope.offers = translateService.getOffers();
-		$scope.job_classes = translateService.getJobClasses();
-
-		$http.get(config.host + "/people/" + $routeParams.group_alias + "/" + $routeParams.id)
-			.success(function (data, status, headers) {
-				$scope.person = data;
-				$scope.person.group_alias = $routeParams.group_alias;
-
-				try {
-					$scope.person.interview.offer = get_key_by_value($scope.person.interview.offer, $scope.offers);
-					$scope.person.career.job_class = get_key_by_value($scope.person.career.job_class, $scope.job_classes);
-					$scope.person.interview.meeting = $scope.meetings[$scope.person.interview.meeting];
-					if($scope.person.personal.resume_path){
-						$scope.resume_url = config.host + '/people/resume/' + $scope.person.personal.resume_path;
-					}
-				} catch (err) {
-					console.log(err);
-				}
-			});
-
-
-		$scope.upload_msg = "";
-		$scope.progress = -1;
-
-		$scope.onFileSelect = function ($file) {
-			$scope.upload = $upload.upload({
-				url: config.host + '/people/resume',
-				method: 'POST',
-				file: $file
-			}).progress(function (evt) {
-				$scope.upload_msg = "";
-				$scope.progress = parseInt(100.0 * evt.loaded / evt.total)
-//                console.log('percent: ' + $scope.progress);
-			}).success(function (data, status, headers, config) {
-//                console.log(data);
-				$scope.person.personal.resume_path = data['resume_path'];
-				$scope.progress = -1;
-				$scope.upload_msg = "upload_success";
-			}).error(function (data) {
-				console.log(data);
-				$scope.progress = -1;
-			});
-		}
-
-
-		$scope.update_person = function () {
-			$scope.person.career.job_class = $scope.person.career.job_class.value;
-			$scope.person.personal.age = parseInt($scope.person.personal.age);
-			$scope.person.personal.work_time = parseInt($scope.person.personal.work_time);
-//            $scope.person.personal.education = parseInt($scope.person.personal.education.value);
-			$scope.person.interview.offer = parseInt($scope.person.interview.offer.value);
-			$scope.person.interview.meeting = parseInt($scope.person.interview.meeting.value);
-			$scope.person.interview.scores.look = parseInt($scope.person.interview.scores.look);
-			$scope.person.interview.scores.knowledge = parseInt($scope.person.interview.scores.knowledge);
-			$scope.person.interview.scores.speech = parseInt($scope.person.interview.scores.speech);
-			$scope.person.interview.scores.intention = parseInt($scope.person.interview.scores.intention);
-			$scope.person.career.salary_exp = $scope.person.career.salary_exp.toString();
-
-			$http.put(config.host + "/people/" + $routeParams.group_alias + '/' + $scope.person._id, data = $scope.person)
-				.success(function (response, status) {
-					$scope.response = response;
-					$scope.status = status;
-					$location.path('/people/' + $scope.person.group_alias);
-				});
-		};
-
-		$scope.delete_person = function () {
-			$http.delete(config.host + "/people/" + $scope.person.group_alias + '/' + $scope.person._id)
-				.success(function (response, status) {
-					$scope.response = response;
-					$scope.status = status;
-					$location.path('/people/' + $scope.person.group_alias);
-				});
-		};
-	})
-	.controller('TranslateCtrl', ['$scope', 'translateService', '$route', function ($scope, translateService, $route) {
-		$scope.langs = ['en', 'ch'];
-
-		$scope.setCurLang = function (lang) {
-			translateService.setCurLang(lang);
-			$route.reload();
-			console.log("setCurLang: " + lang);
-		};
-	}])
-	.controller('LoginCtrl', function ($scope, $http, $location, $cookieStore, flashService, utilService) {
+	.controller('LoginCtrl', function ($scope, $http, $location, $cookieStore, flashService, cookieService) {
 		$scope.password = "";
-		$scope.isLogin = utilService.isLogin;
-		$scope.remember = "";
+		$scope.isLogin = cookieService.isLogin;
 		if ($cookieStore.get(config.login_key)) {
 			$scope.email = $cookieStore.get(config.login_key);
 		}
@@ -538,32 +259,29 @@ app.controller('AccountCtrl',
 					$location.path('/dashboard');
 				});
 		};
-
-
 	})
 	.controller('LogoutCtrl', function ($scope, $http, $location, $cookieStore) {
 		$scope.logout = function () {
-//            console.log('before logout==>' + $cookieStore.get(config.auth_key));
 			$cookieStore.remove(config.auth_key);
-//            console.log('before logout==>' + $cookieStore.get(config.auth_key));
 			$location.path('/');
 		};
 	})
 	.controller('RegisterCtrl', function ($scope, $http, $location, flashService) {
-		$scope.invite_code = "";
-		$scope.email = "";
-
+		$scope.nickname = '';
+		$scope.email = '';
+		$scope.pwd = '';
+		$scope.pwd2 = '';
 		$scope.register = function () {
 			var data = {
-				'code': $scope.invite_code,
-				'log': $scope.email
+				'nickname': $scope.nickname,
+				'email': $scope.email,
+				'pwd': $scope.pwd,
+				'pwd2': $scope.pwd2
 			};
-
-			$http.post(config.supmice + "/user/register", data)
+			$http.post(config.host + "/user/register", data)
 				.success(function (response, status) {
 					$scope.response = response;
 					$scope.status = status;
-//                    console.log(response);
 					$location.path('/login');
 				})
 				.error(function (response, status) {
@@ -573,8 +291,6 @@ app.controller('AccountCtrl',
 					flashService.addMessage(response.msg);
 				});
 		};
-
-
 	})
 	.controller('JobsCtrl', function ($scope, $http, $location, $routeParams) {
 		$scope.jobs = [];
@@ -634,14 +350,14 @@ app.controller('AccountCtrl',
 			$http.get(config.host + "/job/" + $scope.group_alias + "/" + $routeParams.job_id)
 				.success(function(data, status, headers, config){
 					$scope.job = data;
-					try{
-						$scope.job.job_class = get_key_by_value($scope.job.job_class, $scope.job_classes);
-						$scope.job.education = get_key_by_value($scope.job.education, $scope.required_educations);
-						$scope.job.gender = get_key_by_value($scope.job.gender, $scope.genders);
-					}catch (err){
-						console.log(err);
-					}
-				})
+					//try{
+					//	$scope.job.job_class = get_key_by_value($scope.job.job_class, $scope.job_classes);
+					//	$scope.job.education = get_key_by_value($scope.job.education, $scope.required_educations);
+					//	$scope.job.gender = get_key_by_value($scope.job.gender, $scope.genders);
+					//}catch (err){
+					//	console.log(err);
+					//}
+				});
 
 			$scope.update_job = function(){
 				$scope.job.job_class = $scope.job.job_class.value;
@@ -671,6 +387,4 @@ app.controller('AccountCtrl',
 					$location.path('/jobs/' + $scope.group_alias);
 				});
 		};
-
-
 	});

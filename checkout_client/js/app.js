@@ -3,7 +3,7 @@ var app = angular.module('App', ['ngRoute', 'ngCookies', 'ngResource']);
 app.config(function ($routeProvider) {
 	$routeProvider
 		.when('/', {
-			templateUrl: 'views/index.html',
+			templateUrl: 'views/home.html',
 			controller: 'MainCtrl'
 		})
 		.when('/register',{
@@ -14,13 +14,13 @@ app.config(function ($routeProvider) {
 			templateUrl: 'views/login.html',
 			controller: 'LoginCtrl'
 		})
-		.when('/logout', {
-			templateUrl: 'views/logout.html',
-			controller: 'LogoutCtrl'
-		})
 		.when('/dashboard', {
 			templateUrl: '/views/dashboard.html',
 			controller: 'GroupsCtrl'
+		})
+		.when('/account',{
+			templateUrl: '/views/account.html',
+			controller: 'AccountCtrl'
 		})
 		.when('/groups/new',{
 			templateUrl: '/views/new_group.html',
@@ -48,11 +48,5 @@ app.run(function($location){
 	config.supmice = 'http://api.supmice.com';
 	config.login_key = 'julolologin';
 	config.auth_key = 'juloloauth';
-	config.lang_key = 'julololang';
-
-	if ($location.host() == '127.0.0.1'){
-		config.host = 'http://localhost:5000';
-	}else{
-		config.host = 'http://api.itmg.io';
-	}
+	config.host = 'localhost:5000';
 });
