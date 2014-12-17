@@ -14,14 +14,16 @@
         <li class="{active.home}"><a href="#/">首页</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li class="dropdown"><a href="#" data-toggle="dropdown" class="dropdown-toggle">我的账户</a>
+        <li class="dropdown">
+          <a type="button" data-toggle="dropdown" class="dropdown-toggle">
+            <span>我的账户</span>
+            <span class="caret"></span>
+          </a>
           <ul role="menu" class="dropdown-menu">
-            <li>
-              <a ng-href="#/account">账户信息</a>
-            </li>
-            <li ng-controller="LogoutCtrl">
-              <a ng-click="logout()">退出</a>
-            </li>
+            <li><a ng-href="#/account">账户设置</a></li>
+            <li><a ng-href="#/groups">团队管理</a></li>
+            <li class="divider"></li>
+            <li ng-controller="LogoutCtrl"><a ng-click="logout()">退出</a></li>
           </ul>
         </li>
       </ul>

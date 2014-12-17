@@ -1,27 +1,43 @@
-<div ng-include src=" 'views/header.html' "></div>
-<div ng-include src=" 'views/flash.html' "></div>
+<div ng-include src=" 'views/user_header.html' "></div>
+<div ng-include src=" 'views/warning.html' "></div>
 
 <div class="container">
-  <div class="row">
-    <h1 class="page-header col-md-12"><span class="glyphicon glyphicon-gift"></span>&nbsp;团队管理</h1>
+  <div class="row starter-template">
+    <h3>团队信息:</h3>
+    <div class="col-md-5">
+      <form class="form-horizontal" role="form">
+        <div class="form-group">
+          <input type="text" class="form-control" minlength="1" maxlength="24" placeholder="团队名称" ng-model="group_name">
+        </div>
+        <div class="form-group">
+          <textarea row="3" class="form-control" maxlength="140" placeholder="团队简介" ng-model="group_description"></textarea>
+        </div>
+        <div class="form-group" ng-show="isOwner">
+          <button type="submit" class="btn btn-primary btn-large" ng-click="update_group()">保存</button>
+        </div>
+      </form>
+    </div>
   </div>
-  <div class="row">
-    <div class="col-md-12 group">
-      <h3 class="page-header">我的团队</h3>
+  <div class="row starter-template">
+    <h3>团队成员:</h3>
+    <div class="col-md-5">
       <table class="table table-bordered">
         <thead>
-          <tr>
-            <th>团队名</th>
-            <th>所有者</th>
-            <th>权限</th>
-          </tr>
+        <tr>
+          <th>成员昵称</th>
+          <th>成员个性签名</th>
+          <th>删除成员</th>
+        </tr>
         </thead>
         <tbody>
-          <tr>
-            <td colspan="3">还没有加入任何团队</td>
-          </tr>
+        <tr ng-repeat="user in users">
+          <td>{{ user.nickname }}</td>
+          <td>{{ user.description }}</td>
+          <td><button>删除这个成员</button></td>
+        </tr>
         </tbody>
       </table>
+      <button>添加成员</button>
     </div>
   </div>
 </div><!-- /.container -->

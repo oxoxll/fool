@@ -16,7 +16,7 @@ app.config(function ($routeProvider) {
 		})
 		.when('/dashboard', {
 			templateUrl: 'views/dashboard.html',
-			controller: 'GroupsCtrl'
+			controller: 'DashbordCtrl'
 		})
 		.when('/account',{
 			templateUrl: 'views/account.html',
@@ -26,14 +26,17 @@ app.config(function ($routeProvider) {
 			templateUrl: 'views/new_group.html',
 			controller: 'NewGroupCtrl'
 		})
-		.when('/group/:group_alias',{
+		.when('/group/:group_id',{
 			templateUrl: 'views/group.html',
 			controller: 'GroupCtrl'
 		})
-		.when('/group/:group_alias/edit',{
-			templateUrl: 'views/edit_group.html',
+		.when('/groups',{
+			templateUrl: 'views/groups.html',
 			controller: 'GroupCtrl'
 		})
+		//.otherwise({
+		//	redirectTo: '/login'
+		//});
 	});
 
 var config = {};

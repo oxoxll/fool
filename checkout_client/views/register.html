@@ -1,24 +1,24 @@
 <div ng-include src=" 'views/header.html' "></div>
-<div ng-include src=" 'views/flash.html' "></div>
+<div ng-include src=" 'views/warning.html' "></div>
 
 <div class="container">
   <div class="row starter-template">
-    <div class="col-md-5">
+    <div class="col-md-4 col-md-offset-4">
       <form class="form-horizontal" role="form">
         <div class="form-group">
-            <input type="text" class="form-control" minlength="6" maxlength="24"  id="inputNickName3" placeholder="昵称" ng-model="nickname">
+            <input type="text" class="form-control" minlength="1" maxlength="24"  id="inputNickName3" placeholder="昵称" ng-model="nickname">
         </div>
         <div class="form-group">
             <input type="email" class="form-control" minlength="6" maxlength="24"  id="inputEmail3" placeholder="邮箱" ng-model="email">
         </div>
         <div class="form-group">
-            <input type="password" class="form-control" minlength="6" maxlength="24" id="inputPassword3" placeholder="密码 最少6位" ng-model="pwd">
+            <input type="password" class="form-control" minlength="6" maxlength="24" id="inputPassword3" placeholder="密码 不少于6位" ng-model="pwd">
         </div>
         <div class="form-group">
             <input type="password" class="form-control" minlength="6" maxlength="24" id="inputPassword33" placeholder="再输入一次密码" ng-model="pwd2">
         </div>
         <div class="form-group">
-            <button type="submit" class="btn btn-primary btn-large" ng-click="register()">注册</button>
+            <button type="submit" class="btn btn-primary btn-block" ng-click="register()">注册</button>
         </div>
       </form>
     </div>
