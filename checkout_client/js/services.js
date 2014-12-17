@@ -1,7 +1,7 @@
 /**
  * Created by vita on 8/22/14.
  */
-app.factory('flashService', function ($rootScope) {
+app.factory('warningService', function ($rootScope) {
 	var messages = [];
 
 	$rootScope.$on("$routeChangeSuccess", function () {
@@ -9,7 +9,7 @@ app.factory('flashService', function ($rootScope) {
 	});
 
 	return {
-		addMessage: function (msg) {
+		showMessage: function (msg) {
 			if(!msg){
 				return
 			}

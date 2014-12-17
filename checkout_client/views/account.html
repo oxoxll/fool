@@ -1,14 +1,17 @@
 <div ng-include src=" 'views/user_header.html' "></div>
-<div ng-include src=" 'views/flash.html' "></div>
+<div ng-include src=" 'views/warning.html' "></div>
 
 
 <div class="container">
     <div class="row starter-template">
-        <h3>修改个人资料:</h3>
+        <h3>个人信息:</h3>
         <div class="col-md-5">
             <form class="form-horizontal" role="form">
                 <div class="form-group">
-                    <input type="text" class="form-control" minlength="6" maxlength="24"  placeholder="昵称">
+                    <input type="text" class="form-control" minlength="1" maxlength="24" placeholder="昵称" ng-model="nickname">
+                </div>
+                <div class="form-group">
+                    <textarea row="3" class="form-control" maxlength="140" placeholder="个性签名" ng-model="description"></textarea>
                 </div>
                 <div class="form-group">
                     <button type="submit" class="btn btn-primary btn-large" ng-click="update_account()">保存</button>
@@ -16,8 +19,9 @@
             </form>
         </div>
     </div>
-    <h3>修改密码:</h3>
+
     <div class="row starter-template">
+        <h3>修改密码:</h3>
         <div class="col-md-5">
             <form class="form-horizontal" role="form">
                 <div class="form-group">

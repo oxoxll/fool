@@ -1,0 +1,29 @@
+<div ng-include src=" 'views/user_header.html' "></div>
+<div ng-include src=" 'views/warning.html' "></div>
+
+<div class="container">
+  <div class="row">
+    <h1 class="page-header col-md-12"><span class="glyphicon glyphicon-globe"></span>&nbsp;团队管理</h1>
+  </div>
+  <div class="row">
+    <div class="col-md-12 group">
+      <h3 class="page-header">我的团队</h3>
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>团队名</th>
+            <th>所有者</th>
+            <th>团队简介</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="group in user_groups">
+            <td><a href="/group/{{ gid }}"></a>{{ group_name }}</td>
+            <td>{{ owner }}</td>
+            <td>{{ group_description }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div><!-- /.container -->
