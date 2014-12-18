@@ -5,6 +5,11 @@
   <div class="row">
     <h1 class="page-header col-md-12"><span class="glyphicon glyphicon-globe"></span>&nbsp;团队管理</h1>
   </div>
+
+  <div>
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#AddGroupModal">新建团队</button>
+  </div>
+  <br/>
   <div class="row">
     <div class="col-md-12 group">
       <h3 class="page-header">我的团队</h3>
@@ -17,13 +22,40 @@
           </tr>
         </thead>
         <tbody>
-          <tr ng-repeat="group in user_groups">
-            <td><a href="/group/{{ gid }}"></a>{{ group_name }}</td>
-            <td>{{ owner }}</td>
-            <td>{{ group_description }}</td>
+          <tr ng-repeat="group in groups">
+            <td><a href="/group/{{ group.id }}"></a>{{ group.name }}</td>
+            <td>{{ group.owner }}</td>
+            <td>{{ group.description }}</td>
           </tr>
         </tbody>
       </table>
     </div>
   </div>
 </div><!-- /.container -->
+
+
+<!-- Modal -->
+<div class="modal fade" id="AddGroupModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title">选择成员</h4>
+      </div>
+      <div class="modal-body col-md-10 col-md-offset-1">
+        <form class="form-horizontal" role="form">
+          <div class="form-group">
+            <input type="text" class="form-control" minlength="1" maxlength="24" placeholder="团队名称" ng-model="group_name">
+          </div>
+          <div class="form-group">
+            <textarea class="form-control" maxlength="140" placeholder="团队简介" ng-model="group_description"></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+        <button type="button" class="btn btn-primary">确认添加</button>
+      </div>
+    </div>
+  </div>
+</div>

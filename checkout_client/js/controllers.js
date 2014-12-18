@@ -1,37 +1,75 @@
-app.controller('AccountCtrl',
-	function ($scope, $http, $location, $routeParams) {
-		$scope.nickname = "";
-		$scope.origin_password = "";
-		$scope.password = "";
-		$scope.password2 = "";
+//controllers
 
-		//$http.get(config.host + "/user/account")
-		//	.success(function (response, status, headers, config) {
-		//		$scope.account = response;
-		//		if ($scope.account) {
-		//			$scope.email = $scope.account.email || "";
-		//			$scope.description = $scope.account.description || "";
-		//			$scope.alias = $scope.account.alias;
-		//		}
-		//	});
+app.controller('MainCtrl', function ($scope, $http, $location, Auth) {
+		$scope.isLogin = Auth.isLogin();
+		if($scope.isLogin){
+			$location.path("/dashboard");
+		}
+	})
+	.controller('RegisterCtrl', function ($scope, $http, $location, Alert) {
+		//$scope.nickname = '';
+		//$scope.email = '';
+		//$scope.password = '';
+		//$scope.password2 = '';
+		$scope.register = function () {
+			var data = {
+				'nickname': $scope.nickname,
+				'email': $scope.email,
+				'password': $scope.password,
+				'password2': $scope.password2
+			};
+			$http.post(Config.host + "/user/register", data)
+				.success(function (response, status) {
+					$scope.response = response;
+					$location.path('/login');
+				})
+		};
+	})
+	.controller('LoginCtrl', function ($scope, $http, $location, Alert, Auth) {
+		//$scope.email = "";
+		//$scope.password = "";
+		$scope.login = function () {
+			var data = {
+				'email': $scope.email,
+				'password': $scope.password
+			};
+			$http.post(Config.host + "/user/login", data)
+				.success(function (response, status) {
+					Auth.setToken(response.token);
+					$location.path('/dashboard');
+				});
+		};
+	})
+	.controller('LogoutCtrl', function ($scope, $http, $location, Auth) {
+		$scope.logout = function () {
+			Auth.removeToken();
+			$location.path('/');
+		};
+	})
+	.controller('AccountCtrl',
+	function ($scope, $http, $location) {
+		//$scope.nickname = "";
+		//$scope.description = "";
+        //
+		//$scope.origin_password = "";
+		//$scope.password = "";
+		//$scope.password2 = "";
 
+		$http.get(Config.host + "/user/account")
+			.success(function (response, status) {
+				$scope.nickname = response.nickname;
+				$scope.description = response.description;
+			});
 		$scope.update_account = function () {
 			var account_info = {
 				'nickname': $scope.nickname,
 				'description': $scope.description
 			};
-
-			$http.put(config.host + "/user/account", data = account_info)
+			$http.put(Config.host + "/user/account", data = account_info)
 				.success(function (response, status) {
 					$scope.response = response;
 					$scope.status = status;
 					$location.path("/account");
-				})
-				.error(function (response, status) {
-					$scope.response = response;
-					$scope.status = status;
-					console.log(response.msg);
-					warningService.showMessage(response.msg);
 				});
 		};
 
@@ -41,42 +79,22 @@ app.controller('AccountCtrl',
 				'password': $scope.password,
 				'password2': $scope.password2
 			};
-
-			$http.put(config.host + "/user/password", data = password_info)
+			$http.put(Config.host + "/user/password", data = password_info)
 				.success(function (response, status) {
 					$scope.response = response;
 					$scope.status = status;
 					$location.path('/account');
-				})
-				.error(function (response, status) {
-					$scope.response = response;
-					$scope.status = status;
-					console.log(response.msg);
-					warningService.showMessage(response.msg);
 				});
 		};
+	})
+	.controller('DashboardCtrl', function ($scope, $http) {
+		console.log('dashboard');
 
 	})
-	.controller('DashbordCtrl', function ($scope, $http) {
-		console.log('dash');
-
-	})
-	.controller('GroupCtrl', function ($scope, $http, $location, warningService, $routeParams) {
-		$scope.group_alias = $routeParams.group_alias;
-
-		$http.get(config.host + "/group/" + $routeParams.group_alias)
-			.success(function (data, status, headers, config) {
-				$scope.group = data;
-				$scope.alias = $scope.group.alias,
-				$scope.name = $scope.group.name;
-				$scope.address = $scope.group.address;
-				$scope.contact = $scope.group.contact;
-				$scope.email = $scope.group.email;
-				$scope.description = $scope.group.description;
-				$scope.supmice = '';
-				if(Object.keys($scope.group.supmice).length != 0){
-					$scope.supmice = $scope.group.supmice;
-				}
+	.controller('GroupCtrl', function ($scope, $http, $location, Alert, $routeParams) {
+		$http.get(Config.host + "/my_groups")
+			.success(function (response, status) {
+				$scope.groups = response.my_groups;
 			});
 
 		$scope.update_group = function () {
@@ -90,26 +108,24 @@ app.controller('AccountCtrl',
 				'supmice': {}
 			};
 
-			$http.put(config.host + "/group/" + $scope.group_alias, data = group_info)
+			$http.put(Config.host + "/group/" + $scope.group_alias, data = group_info)
 				.success(function (response, status) {
 					$scope.response = response;
-					$scope.status = status;
 					console.log(response);
 					$location.path('/group/' + $scope.group_alias);
 				});
 		};
 
 		$scope.delete_group = function () {
-			$http.delete(config.host + "/group/" + $scope.group_alias)
+			$http.delete(Config.host + "/group/" + $scope.group_alias)
 				.success(function (response, status) {
 					$scope.response = response;
-					$scope.status = status;
 					console.log(response);
 					$location.path('/groups/new')
 				});
 		};
 	})
-	.controller('NewGroupCtrl', function ($scope, $http, $location, warningService) {
+	.controller('NewGroupCtrl', function ($scope, $http, $location, Alert) {
 		$scope.name = "";
 		$scope.alias = "";
 		$scope.address = "";
@@ -128,10 +144,9 @@ app.controller('AccountCtrl',
 				'supmice': {}
 			};
 
-			$http.post(config.host + "/group", data = group_info)
+			$http.post(Config.host + "/group", data = group_info)
 				.success(function (response, status) {
 					$scope.response = response;
-					$scope.status = status;
 					console.log(response);
 					$location.path('/dashboard');
 				})
@@ -139,37 +154,28 @@ app.controller('AccountCtrl',
 					$scope.response = response;
 					$scope.status = status;
 					console.log(response.msg);
-					warningService.showMessage(response.msg);
+					Alert.error(response.msg);
 				});
 		};
-
-
 	})
-	.controller('MainCtrl', function ($scope, $http, $location, cookieService) {
-		$scope.isLogin = cookieService.isLogin();
-		if($scope.isLogin){
-			$location.path("/dashboard");
-		}
-	})
-	.controller('MemberCtrl', function ($scope, $http, $route, warningService, $routeParams) {
+	.controller('MemberCtrl', function ($scope, $http, $route, Alert, $routeParams) {
 		$scope.group_alias = $routeParams.group_alias;
 
-		$http.get(config.host + "/member/" + $scope.group_alias)
-			.success(function (data, status, headers, config) {
+		$http.get(Config.host + "/member/" + $scope.group_alias)
+			.success(function (data, status, headers, Config) {
 				$scope.members = data;
 			});
 
 		$scope.delete_member = function (alias) {
-			$http.delete(config.host + "/member/" + alias)
+			$http.delete(Config.host + "/member/" + alias)
 				.success(function (response, status) {
 					$scope.response = response;
-					$scope.status = status;
 					console.log(response);
 					$route.reload();
 				});
 		};
 	})
-	.controller('NewMemberCtrl', function ($scope, $http, $location, warningService, $routeParams) {
+	.controller('NewMemberCtrl', function ($scope, $http, $location, Alert, $routeParams) {
 		$scope.name = "";
 		$scope.email = "";
 		$scope.group_alias = $routeParams.group_alias;
@@ -182,7 +188,7 @@ app.controller('AccountCtrl',
 				'email': $scope.email
 			};
 
-			$http.post(config.host + "/member", data = member_info)
+			$http.post(Config.host + "/member", data = member_info)
 				.success(function (response, status) {
 					$scope.response = response;
 					
@@ -191,10 +197,10 @@ app.controller('AccountCtrl',
 				});
 		};
 	})
-	.controller('NotificationCtrl', function ($scope, $route, $http, $location, warningService) {
+	.controller('NotificationCtrl', function ($scope, $route, $http, $location, Alert) {
 
-		$http.get(config.host + "/notification")
-			.success(function (data, status, headers, config) {
+		$http.get(Config.host + "/notification")
+			.success(function (data, status, headers, Config) {
 				$scope.notifications = data;
 			});
 
@@ -207,76 +213,10 @@ app.controller('AccountCtrl',
 				'accept': accept
 			};
 
-			$http.post(config.host + "/member/response", data = accept_info)
+			$http.post(Config.host + "/member/response", data = accept_info)
 				.success(function (response, status) {
 					$scope.response = response;
-					$scope.status = status;
 					$route.reload();
-				});
-		};
-	})
-	.controller('LoginCtrl', function ($scope, $http, $location, $cookieStore, warningService, cookieService) {
-		$scope.password = "";
-		$scope.isLogin = cookieService.isLogin;
-		if ($cookieStore.get(config.login_key)) {
-			$scope.email = $cookieStore.get(config.login_key);
-		}
-		if ($cookieStore.get('enablerem')) {
-			$scope.remember = $cookieStore.get('enablerem');
-		}
-		$scope.login = function () {
-			if ($scope.remember) {
-				$cookieStore.put(config.login_key, $scope.email);
-				$cookieStore.put('enablerem', true);
-			} else {
-				$cookieStore.remove(config.login_key);
-				$cookieStore.remove('enablerem');
-			}
-
-			var data = {
-				'log': $scope.email,
-				'password': $scope.password
-			};
-
-			$http.post(config.host + "/user/login", data)
-				.success(function (response, status) {
-					$scope.response = response;
-					$scope.status = status;
-//                console.log(response);
-					$cookieStore.put(config.auth_key, response.token);
-					$location.path('/dashboard');
-				});
-		};
-	})
-	.controller('LogoutCtrl', function ($scope, $http, $location, $cookieStore) {
-		$scope.logout = function () {
-			$cookieStore.remove(config.auth_key);
-			$location.path('/');
-		};
-	})
-	.controller('RegisterCtrl', function ($scope, $http, $location, warningService) {
-		$scope.nickname = '';
-		$scope.email = '';
-		$scope.password = '';
-		$scope.password2 = '';
-		$scope.register = function () {
-			var data = {
-				'nickname': $scope.nickname,
-				'email': $scope.email,
-				'password': $scope.password,
-				'password2': $scope.password2
-			};
-			$http.post(config.host + "/user/register", data)
-				.success(function (response, status) {
-					$scope.response = response;
-					$scope.status = status;
-					$location.path('/login');
-				})
-				.error(function (response, status) {
-					$scope.response = response;
-					$scope.status = status;
-//                    console.log(response.msg);
-					warningService.showMessage(response.msg);
 				});
 		};
 	})
@@ -284,13 +224,13 @@ app.controller('AccountCtrl',
 		$scope.jobs = [];
 		$scope.group_alias = $routeParams.group_alias;
 
-		$http.get(config.host + "/job/" + $routeParams.group_alias)
-			.success(function (data, status, headers, config) {
+		$http.get(Config.host + "/job/" + $routeParams.group_alias)
+			.success(function (data, status, headers, Config) {
 				$scope.jobs = data["jobs"];
 				$scope.classes = data["classes"];
 				$scope.class_num = data["class_num"];
 				$scope.total = data["total"];
-			})
+			});
 
 		$scope.searchKey = null;
 		$scope.job_class = 'all';
@@ -303,7 +243,7 @@ app.controller('AccountCtrl',
 
 		$scope.setClass = function(job){
 			$scope.job_class = job;
-		}
+		};
 
 		$scope.setSortKey = function(key){
 			$scope.sortKey = key;
@@ -331,12 +271,12 @@ app.controller('AccountCtrl',
 			},
 			'responsibility': "",
 			'requirement': ""
-		}
+		};
 
 		if($routeParams.job_id){
 			$scope.show_delete = true;
-			$http.get(config.host + "/job/" + $scope.group_alias + "/" + $routeParams.job_id)
-				.success(function(data, status, headers, config){
+			$http.get(Config.host + "/job/" + $scope.group_alias + "/" + $routeParams.job_id)
+				.success(function(data, status, headers, Config){
 					$scope.job = data;
 					//try{
 					//	$scope.job.job_class = get_key_by_value($scope.job.job_class, $scope.job_classes);
@@ -351,7 +291,7 @@ app.controller('AccountCtrl',
 				$scope.job.job_class = $scope.job.job_class.value;
 				$scope.job.education = $scope.job.education.value;
 				$scope.job.gender = $scope.job.education.value;
-				$http.put(config.host + "/job/" + $scope.group_alias + "/" + $routeParams.job_id, data=$scope.job)
+				$http.put(Config.host + "/job/" + $scope.group_alias + "/" + $routeParams.job_id, data=$scope.job)
 					.success(function(response, status){
 						$location.path('/job/' + $scope.group_alias + "/view/" + response.id);
 					});
@@ -359,7 +299,7 @@ app.controller('AccountCtrl',
 			};
 
 			$scope.delete_job = function(){
-				$http.delete(config.host + "/job/" + $routeParams.group_alias + "/" + $routeParams.job_id)
+				$http.delete(Config.host + "/job/" + $routeParams.group_alias + "/" + $routeParams.job_id)
 					.success(function(response, status){
 						$location.path('/jobs/' + $scope.group_alias);
 					})
@@ -370,7 +310,7 @@ app.controller('AccountCtrl',
 			$scope.job.job_class = $scope.job.job_class.value;
 			$scope.job.education = $scope.job.education.value;
 			$scope.job.gender = $scope.job.gender.value;
-			$http.post(config.host + "/job/" + $scope.group_alias, data=$scope.job)
+			$http.post(Config.host + "/job/" + $scope.group_alias, data=$scope.job)
 				.success(function(response, status){
 					$location.path('/jobs/' + $scope.group_alias);
 				});
