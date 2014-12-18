@@ -18,6 +18,7 @@
       </form>
     </div>
   </div>
+  <!-- 团队成员start -->
   <div class="row starter-template">
     <h3>团队成员:</h3>
     <div class="col-md-5">
@@ -40,10 +41,38 @@
       <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">添加成员</button>
     </div>
   </div>
+  <!-- 团队成员end -->
+  <!-- 订单start  -->
+  <div class="row starter-template">
+    <h3>订单列表:</h3>
+    <div class="col-md-5">
+      <table class="table table-bordered">
+        <thead>
+        <tr>
+          <th>付款人</th>
+          <th>总金额</th>
+          <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr >
+          <td>张三</td>
+          <td>98元</td>
+          <td>
+            <button type="button" class="btn btn-primary" data-toggle="modal">删除</button>
+            <button type="button" class="btn btn-primary" data-toggle="modal">修改</button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addOrder">新增订单</button>
+    </div>
+  </div>
+  <!-- 订单end -->
 </div><!-- /.container -->
 
 
-<!-- Modal -->
+<!-- 增加成员Modal -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -65,7 +94,7 @@
   </div>
 </div>
 
-<!-- delete Modal -->
+<!-- 删除成员 Modal -->
 <div class="modal fade" id="myModalDelete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -79,6 +108,58 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
         <button type="button" class="btn btn-primary">确认删除</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 新增订单 Modal -->
+<div class="modal fade" id="addOrder" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title">新增订单</h4>
+      </div>
+      <div class="modal-body">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <td>选择</td>
+              <td>姓名</td>
+              <td>金额</td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><input type="checkbox" /></td>
+              <td>张三</td>
+              <td><input type="text" /></td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" /></td>
+              <td>李四</td>
+              <td><input type="text" /></td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" /></td>
+              <td>王二小</td>
+              <td><input type="text" /></td>
+            </tr>
+            <tr>
+              <td>付款人</td>
+              <td colspan="2"><input type="text" /></td>
+            </tr>
+            <tr>
+              <td>总金额</td>
+              <td colspan="2"><input type="text" /></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+        <button type="button" class="btn btn-primary">增加</button>
       </div>
     </div>
   </div>
