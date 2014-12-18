@@ -2,6 +2,10 @@ var app = angular.module('App', ['ngRoute', 'ngCookies', 'ngResource']);
 
 app.config(function ($routeProvider) {
 	$routeProvider
+		.when('/test', {
+			templateUrl: 'views/test.html'
+			//controller: 'MainCtrl'
+		})
 		.when('/', {
 			templateUrl: 'views/home.html',
 			controller: 'MainCtrl'
@@ -34,22 +38,39 @@ app.config(function ($routeProvider) {
 			templateUrl: 'views/groups.html',
 			controller: 'GroupCtrl'
 		})
-		//.otherwise({
-		//	redirectTo: '/login'
-		//});
-	});
-
-var config = {};
-app.run(function($location){
-	Date.prototype.yyyymmdd = function () {
-		var yyyy = this.getFullYear().toString();
-		var mm = (this.getMonth() + 1).toString(); // getMonth() is zero-based
-		var dd = this.getDate().toString();
-		return yyyy + '-' + (mm[1] ? mm : "0" + mm[0]) + '-' + (dd[1] ? dd : "0" + dd[0]);
-	};
-
-	config.supmice = 'http://api.supmice.com';
-	config.login_key = 'julolologin';
-	config.auth_key = 'juloloauth';
-	config.host = 'localhost:5000';
-});
+		.otherwise({
+			redirectTo: '/login'
+		});
+	})
+	.run([
+	'$rootScope', '$location', $http, 'Auth', 'Config', function($rootScope, $location, Auth, Config) {
+		$rootScope.$on("$routeChangeSuccess", function () {
+			$rootScope.message = null;
+		});
+		return $rootScope.$on('$locationChangeStart', function() {
+			var isInOuterPathList;
+			isInOuterPathList = (function() {
+				var outerPathList, pth, reg, url, _i, _len;
+				outerPathList = Config.path.outer;
+				for (_i = 0, _len = outerPathList.length; _i < _len; _i++) {
+					pth = outerPathList[_i];
+					url = $location.url();
+					reg = new RegExp(pth);
+					if (reg.test(url)) {
+						return true;
+					}
+				}
+				return false;
+			})();
+			if (Auth.isLogin()) {
+				if (isInOuterPathList) {
+					return $location.path('/');
+				}
+			} else {
+				if (!isInOuterPathList) {
+					return $location.path('/login');
+				}
+			}
+		});
+	}
+]);
